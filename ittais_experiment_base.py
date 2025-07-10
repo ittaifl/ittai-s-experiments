@@ -68,6 +68,25 @@ from ratinabox import utils
 import ratinabox
 import warnings
 warnings.filterwarnings('ignore')
+import argparse, os, torch
+
+parser = argparse.ArgumentParser(
+    description="Train (or resume) your predictive‐learning experiment"
+)
+parser.add_argument(
+    "--resume",
+    type=str,
+    default=None,
+    help="Path to a .pth checkpoint to resume training from"
+)
+parser.add_argument(
+    "--save-dir",
+    type=str,
+    default="/content/drive/MyDrive/ittai_experiments/models",
+    help="Directory where checkpoints (and final model) are stored"
+)
+args = parser.parse_args()
+
 
 """# Section 1 : Structured latent learning in simple discrete environment"""
 
@@ -802,11 +821,17 @@ act_dim = act_seq.shape[-1]
 hidden_dim = 100
 # Initialize model
 model = NextStepRNN(obs_dim=obs_dim, act_dim=act_dim, hidden_dim=hidden_dim)
+# ——— Resume from a checkpoint if `--resume` was passed ———
+if args.resume and os.path.isfile(args.resume):
+    print(f"⏳ Resuming from checkpoint {args.resume}")
+    model.load_state_dict(torch.load(args.resume, map_location=device))
 
 loss_ = train_next_step_rnn(model, train_loader, val_loader, num_epochs=800, lr=0.01)
-torch.save(model.state_dict(), "model_final.pth")
-print("Saved final predictive-model weights to model_final.pth")
-
+# ——— Save into args.save_dir ———
+os.makedirs(args.save_dir, exist_ok=True)
+out_path = os.path.join(args.save_dir, "model_final.pth")
+torch.save(model.state_dict(), out_path)
+print(f"✅ Saved final weights to {out_path}")
 #################### [ TO DO ] ####################
 # Plot the loss across epochs of training
 plt.plot(loss_)
