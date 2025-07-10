@@ -1,0 +1,69 @@
+{
+  "environment": {
+    "width": 1.0,
+    "height": 1.0,
+    "grid_size": 64,
+    "num_wall_objects": 12,
+    "object_types": [0, 1, 2],
+    "seed": 42
+  },
+  "sensors": {
+    "sensor_types": ["red", "green", "purple"],
+    "distance_range": [0.01, 0.11],
+    "spatial_resolution": 0.05,
+    "angle_range": [0, 125],
+    "fov_downscalar": 3,
+    "num_beams": 6,
+    "max_ray_length": 100.0
+  },
+  "data": {
+    "n_trials": 1000,
+    "timesteps": 100,
+    "test_timesteps": 50000,
+    "batch_size": 128,
+    "val_fraction": 0.2,
+    "grid_size": 64,
+    "seed": 42,
+    "train_data_path": null,
+    "test_data_path": null,
+    "cache_dir": "./data_cache"
+  },
+  "model": {
+    "obs_dim": 24,
+    "act_dim": 8,
+    "hidden_dim": 100,
+    "dropout_rate": 0.15,
+    "noise_std": 0.03,
+    "epsilon": 1e-2,
+    "activation": "norm_relu",
+    "init_method": "levinstein"
+  },
+  "training": {
+    "num_epochs": 800,
+    "learning_rate": 0.01,
+    "batch_size": 128,
+    "patience": 8,
+    "max_lr_reductions": 5,
+    "lr_reduction_factor": 0.5,
+    "min_improvement": 5e-5,
+    "l1_lambda": 0.0,
+    "save_every": 50,
+    "checkpoint_dir": "./checkpoints",
+    "resume_from": null,
+    "device": "auto",
+    "log_every": 10,
+    "verbose": true
+  },
+  "plotting": {
+    "figsize": [12, 8],
+    "dpi": 100,
+    "save_format": "png",
+    "colormap": "jet",
+    "interpolation": "gaussian",
+    "units_to_plot": 100,
+    "grid_size": [10, 10],
+    "output_dir": "./plots",
+    "show_inline": true,
+    "save_plots": true
+  }
+}
